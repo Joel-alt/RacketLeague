@@ -9,7 +9,7 @@ class Game:
     def __init__(self):
         #génération joueur
         self.player = Player()
-        
+        self.pressed = {}  # touches actionnées par le joueur
         self.sol = Sol()
         self.gravite = 7
         self.resistance = 0
