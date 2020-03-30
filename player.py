@@ -17,7 +17,8 @@ class Player(pygame.sprite.Sprite):
         
         #saut
         self.J_saute = False
-        self.saut = 35
+        self.saut = 25
+        self.double_saut = 0
         
         
         
@@ -29,15 +30,14 @@ class Player(pygame.sprite.Sprite):
         
     def sauter(self):
         
-        if self.J_saute == True :
-
+        if self.J_saute == True:
+            
+            
             if self.saut <= 0:
-                self.saut = 35
+                self.saut = 25
+                self.double_saut += 25
                 self.J_saute  = False
                 
             else :
                 self.saut = self.saut -1
-                print(self.saut)
-                
-        
-        self.rect.y = self.rect.y - (self.saut)
+                self.rect.y = self.rect.y - (self.saut)
