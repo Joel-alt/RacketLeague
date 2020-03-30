@@ -142,6 +142,7 @@ while running:
             if game.player.rect.colliderect(game.effects.rect_jump):
                 Boost = True
                 game.player.Jump_Boost = True
+                StrEffects = font.render("Jump Boost !", 1, (177, 0, 250))
                 
             if Boost == True:
                 if compteur_temps_boost == 0:
@@ -155,6 +156,7 @@ while running:
                     Boost = False
                     game.player.Jump_Boost = False
                     game.player.saut= 30
+                    StrEffects = font.render("", 1, (16, 16, 22))
 
         
         #mystere
@@ -195,9 +197,11 @@ while running:
                 #1 gravité plus faible
                 if mystere == 1 :
                     game.gravite = 3
+                    StrEffects = font.render("Gravité plus faible !", 1, (177, 0, 250))
                 
                 if mystere == 2 :
                     game.gravite = 16
+                    StrEffects = font.render("Gravité plus forte !", 1, (165, 0, 15))
                 
                 if compteur_temps_boost >= 500:
                     compteur_temps_boost = 0
@@ -208,6 +212,7 @@ while running:
                         game.gravite = 9
                     
                     mystere = 0
+                    StrEffects = font.render("", 1, (16, 16, 22))
     
     
     #Si le papillon quitte la fenetre == il atteint l'objectif
