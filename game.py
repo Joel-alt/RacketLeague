@@ -2,25 +2,28 @@ import pygame
 from player import Player
 from sol import Sol
 from enemy import Enemy
+from effects import Effects
 
 
 #class jeu
 class Game:
 
     def __init__(self):
-        #génération joueur
+        #chargement joueur
         self.player = Player()
-        #génération enemy
+        #chargement enemy
         self.enemy = Enemy()
-        #génération sol
+        #chargement sol
         self.sol = Sol()
+        #chargement effects
+        self.effects = Effects()
         
         
         #définir pressed
         self.pressed = {}  #touches actionnées par le joueur
         
         #création gravité
-        self.gravite = 7
+        self.gravite = 9
         self.resistance = 0
         
     def gravite_jeu(self):

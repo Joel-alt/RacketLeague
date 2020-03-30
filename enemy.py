@@ -16,6 +16,7 @@ class Enemy(pygame.sprite.Sprite):
         
         self.vitesse=4
         self.i=0
+        self.amplitude=25
         
         self.compteur = 0
    
@@ -23,7 +24,7 @@ class Enemy(pygame.sprite.Sprite):
    
     def move(self):
         self.rect.x -= self.vitesse
-        self.rect.y = 200 + sin(self.i)*25
+        self.rect.y = 200 + sin(self.i)*self.amplitude
         self.compteur += 1
         
         

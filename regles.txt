@@ -1,0 +1,14 @@
+regles
+
+effets :
+
+boost - vitesse 
+jump boost 
+
+boost vitesse papillon ( pas lgtmp)
+ralentir vitesse papillon
+ralentir vitesse perso
+jump unboost
+
+gravité plus légère
+gravité plus lourde
