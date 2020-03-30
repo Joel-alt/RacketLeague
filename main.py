@@ -91,7 +91,7 @@ while running:
     Compteur +=1
     if Compteur >= 800:
         if Compteur == 800 :
-            effet = 3
+            effet = randint(1,3)
         
         
         #vitesse
@@ -176,7 +176,7 @@ while running:
                 if compteur_temps_boost == 0:
                     game.effects.rect_mystere.x = randint(200,1400)
                     game.effects.y_m= randint(100,440)
-                    mystere = 2
+                    mystere = randint(1,2)
                 compteur_temps_boost +=1
                 
                 #1 gravité plus faible
