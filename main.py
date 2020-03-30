@@ -7,6 +7,7 @@ from player import Player
 from sol import Sol
 from enemy import Enemy
 from effects import Effects
+from plateforme import Plateforme
 
 pygame.init()
 
@@ -20,7 +21,7 @@ screen = pygame.display.set_mode((1600,800))
 
 
 #charger image arriere plan
-background=pygame.image.load('assets/bg1.jpg')
+background=pygame.image.load('assets/bg2.png')
 
 
 
@@ -31,6 +32,8 @@ player = Player()
 game = Game()
 #chargement sol
 sol = Sol()
+#Plateforme
+plateforme = Plateforme()
 #chargement enemy
 enemy = Enemy()
 #chargement effets
@@ -59,7 +62,7 @@ Boost= False
 compteur_temps_boost = 0
 effet=0
 mystere = 0
-
+tmp = 0
 
 
 
@@ -68,14 +71,20 @@ while running:
     
     #mise a jour ecran
     pygame.display.flip()
-    #p=gravité dans le jeu
+    #gravité dans le jeu
     game.gravite_jeu()
     
     
     #background
     screen.blit(background, (0, 0))
+    #plateforme 1
+    screen.blit(plateforme.im_plateforme, game.plateforme.plateforme_1)
+    #plateforme 2
+    screen.blit(plateforme.im_plateforme, game.plateforme.plateforme_2)
+    # plateforme 2
+    screen.blit(plateforme.im_plateforme, game.plateforme.plateforme_3)
     #image joueur
-    screen.blit(player.image, game.player.rect)
+    screen.blit(player.im_joueur, game.player.joueur)
     
     
     
@@ -106,14 +115,14 @@ while running:
                 Boost = False
         
             #Si on chope le boost :
-            if game.player.rect.colliderect(game.effects.rect_vitesse):
+            if game.player.joueur.colliderect(game.effects.rect_vitesse):
                 Boost = True
                 StrEffects = font.render("Speed Boost !",1,(0,90,63))
                 
             if Boost == True:
                 if compteur_temps_boost == 0:
                     game.effects.rect_vitesse.x = randint(200,1400)
-                    game.effects.y_i= randint(100,440)
+                    game.effects.y_i= randint(100,580)
                 compteur_temps_boost +=1
                 game.player.vitesse = 12
                 
@@ -139,7 +148,7 @@ while running:
                 Boost = False
         
             #Si on chope le boost :
-            if game.player.rect.colliderect(game.effects.rect_jump):
+            if game.player.joueur.colliderect(game.effects.rect_jump):
                 Boost = True
                 game.player.Jump_Boost = True
                 StrEffects = font.render("Jump Boost !", 1, (177, 0, 250))
@@ -147,7 +156,7 @@ while running:
             if Boost == True:
                 if compteur_temps_boost == 0:
                     game.effects.rect_jump.x = randint(200,1400)
-                    game.effects.y_j= randint(100,440)
+                    game.effects.y_j= randint(100,580)
                 compteur_temps_boost +=1
                 
                 if compteur_temps_boost >= 500:
@@ -171,14 +180,14 @@ while running:
                 Boost = False
         
             #Si on chope le boost :
-            if game.player.rect.colliderect(game.effects.rect_mystere):
+            if game.player.joueur.colliderect(game.effects.rect_mystere):
                 Boost = True
                 
             if Boost == True:
                 if compteur_temps_boost == 0:
                     game.effects.rect_mystere.x = randint(200,1400)
-                    game.effects.y_m= randint(100,440)
-                    mystere = randint(1,2)
+                    game.effects.y_m= randint(100,580)
+                    mystere = randint(1,6)
                 compteur_temps_boost +=1
                 
                 #1 gravité plus faible
@@ -193,8 +202,7 @@ while running:
                 
                 
                 
-                
-                #1 gravité plus faible
+
                 if mystere == 1 :
                     game.gravite = 3
                     StrEffects = font.render("Gravité plus faible !", 1, (177, 0, 250))
@@ -202,7 +210,30 @@ while running:
                 if mystere == 2 :
                     game.gravite = 16
                     StrEffects = font.render("Gravité plus forte !", 1, (165, 0, 15))
-                
+
+                if mystere == 3:
+                    if tmp == 0:
+                        tmp = game.enemy.vitesse
+                    game.enemy.vitesse = 4
+                    StrEffects = font.render("Papillon ralenti !", 1, (165, 0, 15))
+
+                if mystere == 4:
+                    game.player.vitesse = 3
+                    StrEffects = font.render("Vitesse ralentie !", 1, (165, 0, 15))
+
+                if mystere == 5:
+                    if tmp == 0 :
+                        tmp = randint(1,5)
+                        score += tmp
+                    StrEffects = font.render("Bonus : + "+str(tmp)+"points !", 1, (165, 0, 15))
+
+                if mystere == 6:
+                    if tmp == 0 :
+                        tmp = randint(1,5)
+                        score -= tmp
+                    StrEffects = font.render("Malus : - "+str(tmp)+"points !", 1, (165, 0, 15))
+
+
                 if compteur_temps_boost >= 500:
                     compteur_temps_boost = 0
                     Compteur =0
@@ -210,21 +241,27 @@ while running:
                     
                     if mystere == 1 or mystere == 2 :
                         game.gravite = 9
-                    
+
+                    if mystere == 3:
+                        game.enemy.vitesse = tmp
+
+                    if mystere == 4:
+                        game.player.vitesse = 7
+
+                    tmp = 0
                     mystere = 0
                     StrEffects = font.render("", 1, (16, 16, 22))
     
     
     #Si le papillon quitte la fenetre == il atteint l'objectif
             
-    if game.enemy.rect.x > -50:        
+    if game.enemy.enemy.x > -50:
         game.enemy.move()
         #image enemy
-        screen.blit(enemy.image, game.enemy.rect)
-    elif game.enemy.rect.x <= -50:
+        screen.blit(enemy.im_enemy, game.enemy.enemy)
+    elif game.enemy.enemy.x <= -50:
 
-        game.enemy.rect.x = 1700
-        game.enemy.rect.y = 200
+        game.enemy.enemy.x = 1700
         game.enemy.move()
 
     
@@ -232,7 +269,6 @@ while running:
     
     
     #Quitter la fenetre
-        
     for event in pygame.event.get():
         #Si on appuie sur la croix pour quitter
         if event.type == pygame.QUIT:
@@ -247,21 +283,27 @@ while running:
     
     
     #Déplacements à droite
-        
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <1550:
+
+    #Déplacement à droite
+    if game.pressed.get(pygame.K_RIGHT) and game.player.joueur.x <1550:
         #fonction créée dans la class player
         game.player.move_right()
         
         
     #Déplacement à gauche
-        
-    if game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
+    if game.pressed.get(pygame.K_LEFT) and game.player.joueur.x > 0:
         game.player.move_left()
-        
-        
+
+
+    #descendre plateforme
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_DOWN and game.plateforme.plateforme_1.colliderect(game.player.joueur) \
+            or event.key == pygame.K_DOWN and game.plateforme.plateforme_2.colliderect(game.player.joueur) \
+            or event.key == pygame.K_DOWN and game.plateforme.plateforme_3.colliderect(game.player.joueur) :
+            game.player.joueur.y += 2
+
         
     #Permettre double saut au perso
-        
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_UP and game.player.double_saut<60:
             game.player.J_saute = True
@@ -274,17 +316,18 @@ while running:
         
         
     #Pour initialiser pressed
-        
     if event.type == pygame.KEYDOWN:
         game.pressed[event.key] = True
     if event.type == pygame.KEYUP:    
         game.pressed[event.key] = False
-            
-    
+
+
 
     #si le perso touche le sol, alors il arrete de tomber.
-        
-    if game.sol.sol_principal.colliderect(game.player.rect):
+    if game.sol.sol_principal.colliderect(game.player.joueur) or game.player.joueur.midbottom[1] // 10 * 10 == game.plateforme.plateforme_1.top and game.plateforme.plateforme_1.colliderect(game.player.joueur)\
+            or game.player.joueur.midbottom[1] // 10 * 10 == game.plateforme.plateforme_2.top and game.plateforme.plateforme_2.colliderect(game.player.joueur)\
+            or game.player.joueur.midbottom[1] // 10 * 10 == game.plateforme.plateforme_3.top and game.plateforme.plateforme_3.colliderect(game.player.joueur):
+
         if mystere == 1 and Boost == True :
             game.resistance = -3
         elif mystere == 2 and Boost == True :
@@ -303,12 +346,17 @@ while running:
      
     #Si on attrape un papillon
         
-    if game.enemy.rect.y <= game.player.rect.midright[1] and game.enemy.rect.y >= game.player.rect.topright[1] and game.player.rect.colliderect(game.enemy.rect) :
+    if game.enemy.enemy.y <= game.player.joueur.midright[1] and game.enemy.enemy.y >= game.player.joueur.topright[1] and game.player.joueur.colliderect(game.enemy.enemy) :
         
-        game.enemy.rect.x = 1600
-        game.enemy.rect.y = randint(200,400)
+        game.enemy.enemy.x = randint(1700, 2200)
+        game.enemy.y_e = randint(100,600)
         game.enemy.amplitude = randint(10,200)
-        game.enemy.vitesse +=1
+
+        if score == 2 or score == 6 or score == 10:
+            game.enemy.vitesse +=1
+        if score == 15 or score == 20 or score >= 25:
+            game.enemy.vitesse +=2
+
         score += 1
         game.enemy.move()
     

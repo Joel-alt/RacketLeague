@@ -11,9 +11,9 @@ class Effects(pygame.sprite.Sprite):
         self.im_vitesse = pygame.image.load('assets/vitesse.png')
         self.compteur = 0
         self.rect_vitesse = self.im_vitesse.get_rect()
-        self.rect_vitesse.y = 440
+        self.rect_vitesse.y = 670
         #permet d'utiliser /random et conserver la valeur, voir main
-        self.y_i = 440
+        self.y_i = 670
         self.rect_vitesse.x = 800
         self.i=0
         
@@ -22,9 +22,9 @@ class Effects(pygame.sprite.Sprite):
         #Jump Boost
         self.im_jump = pygame.image.load('assets/jump_boost.png')
         self.rect_jump = self.im_jump.get_rect()
-        self.rect_jump.y = 440
+        self.rect_jump.y = 670
         #permet d'utiliser /random et conserver la valeur, voir main
-        self.y_j = 440
+        self.y_j = 670
         self.rect_jump.x = 300
         
         
@@ -33,10 +33,10 @@ class Effects(pygame.sprite.Sprite):
          #random effect
         self.im_mystere = pygame.image.load('assets/random_effect.png')
         self.rect_mystere = self.im_mystere.get_rect()
-        self.rect_mystere.y = 440
+        self.rect_mystere.y = 670
         #permet d'utiliser /random et conserver la valeur, voir main
-        self.y_m = 440
-        self.rect_mystere.x = 300
+        self.y_m = 670
+        self.rect_mystere.x = 1200
         
         
     def boost_vitesse(self):

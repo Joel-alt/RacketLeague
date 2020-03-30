@@ -3,6 +3,7 @@ from player import Player
 from sol import Sol
 from enemy import Enemy
 from effects import Effects
+from plateforme import Plateforme
 
 
 #class jeu
@@ -17,6 +18,8 @@ class Game:
         self.sol = Sol()
         #chargement effects
         self.effects = Effects()
+        #chargement plateforme
+        self.plateforme = Plateforme()
         
         
         #définir pressed
@@ -27,4 +30,4 @@ class Game:
         self.resistance = 0
         
     def gravite_jeu(self):
-        self.player.rect.y += self.gravite + self.resistance
+        self.player.joueur.y += self.gravite + self.resistance

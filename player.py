@@ -7,11 +7,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         
         #coords+image joueur
-        self.image = pygame.image.load('assets/player.png')
-        self.image_2 = pygame.image.load('assets/player_2.png')
-        self.rect = self.image.get_rect()
-        self.rect.x=400
-        self.rect.y=000
+        self.im_joueur = pygame.image.load('assets/player.png')
+        self.joueur = self.im_joueur.get_rect()
+        self.joueur.x=400
+        self.joueur.y=000
         
         #carac joueur
         self.vitesse = 7
@@ -22,16 +21,14 @@ class Player(pygame.sprite.Sprite):
         self.saut = 30
         self.double_saut = 0
         
-        
+
         
         
     def move_right(self):
-        self.rect.x += self.vitesse
-        self.image = pygame.image.load('assets/player.png')
+        self.joueur.x += self.vitesse
     
     def move_left(self):
-        self.rect.x -= self.vitesse
-        self.image = pygame.image.load('assets/player_2.png')
+        self.joueur.x -= self.vitesse
         
     def sauter(self):
         
@@ -46,7 +43,7 @@ class Player(pygame.sprite.Sprite):
                     
                 else :
                     self.saut = self.saut -1
-                    self.rect.y = self.rect.y - (self.saut)
+                    self.joueur.y = self.joueur.y - (self.saut)
                 
             elif self.Jump_Boost == True :
    
@@ -57,7 +54,7 @@ class Player(pygame.sprite.Sprite):
                     
                 else :
                     self.saut = self.saut -1
-                    self.rect.y = self.rect.y - (self.saut)
+                    self.joueur.y = self.joueur.y - (self.saut)
    
     
         
