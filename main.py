@@ -91,7 +91,7 @@ while running:
     Compteur +=1
     if Compteur >= 800:
         if Compteur == 800 :
-            effet = randint(1,3)
+            effet = 3
         
         
         #vitesse
