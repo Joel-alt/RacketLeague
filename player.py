@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.joueur.y=000
         
         #carac joueur
-        self.vitesse = 7
+        self.vitesse = 4
         
         #saut
         self.J_saute = False

@@ -21,7 +21,7 @@ screen = pygame.display.set_mode((1600,800))
 
 
 #charger image arriere plan
-background=pygame.image.load('assets/bg2.png')
+background=pygame.image.load('assets/bg2.png').convert()
 
 
 
@@ -350,7 +350,7 @@ while running:
         
         game.enemy.enemy.x = randint(1700, 2200)
         game.enemy.y_e = randint(100,600)
-        game.enemy.amplitude = randint(10,200)
+        game.enemy.amplitude = randint(10,150)
 
         if score == 2 or score == 6 or score == 10:
             game.enemy.vitesse +=1

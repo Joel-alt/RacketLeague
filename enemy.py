@@ -15,7 +15,7 @@ class Enemy(pygame.sprite.Sprite):
         self.enemy.y=500
         self.y_e = 500
         
-        self.vitesse=4
+        self.vitesse= 1
         self.i=0
         self.amplitude=25
         
@@ -28,7 +28,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = 1200
         self.rect.y = 200
 
-        self.vitesse = 4
         self.i = 0
         self.amplitude = 25
 
@@ -43,7 +42,7 @@ class Enemy(pygame.sprite.Sprite):
         
         
         if self.i>=0 and self.i!= 180 : 
-            self.i += 0.1
+            self.i += 0.03
             self.compteur = 0
         
         elif self.i== 180:
