@@ -26,7 +26,7 @@ class Game:
         self.pressed = {}  #touches actionnées par le joueur
         
         #création gravité
-        self.gravite = 9
+        self.gravite = 3
         self.resistance = 0
         
     def gravite_jeu(self):

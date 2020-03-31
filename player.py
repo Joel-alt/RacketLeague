@@ -13,12 +13,12 @@ class Player(pygame.sprite.Sprite):
         self.joueur.y=000
         
         #carac joueur
-        self.vitesse = 4
+        self.vitesse = 3
         
         #saut
         self.J_saute = False
         self.Jump_Boost = False
-        self.saut = 30
+        self.saut = 10
         self.double_saut = 0
         
 
@@ -37,23 +37,23 @@ class Player(pygame.sprite.Sprite):
             if self.Jump_Boost == False :
                 
                 if self.saut <= 0:
-                    self.saut = 30
-                    self.double_saut += 30
+                    self.saut = 10
+                    self.double_saut += 10
                     self.J_saute  = False
                     
                 else :
-                    self.saut = self.saut -1
+                    self.saut = self.saut -0.1
                     self.joueur.y = self.joueur.y - (self.saut)
                 
             elif self.Jump_Boost == True :
    
                 if self.saut <= 0:
-                    self.saut = 35
-                    self.double_saut += 35
+                    self.saut = 10
+                    self.double_saut += 10
                     self.J_saute  = False
                     
                 else :
-                    self.saut = self.saut -1
+                    self.saut = self.saut -0.06
                     self.joueur.y = self.joueur.y - (self.saut)
    
     

@@ -45,7 +45,7 @@ class Effects(pygame.sprite.Sprite):
         
         self.compteur += 1
         if self.i>=0 and self.i!= 180 : 
-            self.i += 0.1
+            self.i += 0.02
             self.compteur = 0
         
         elif self.i== 180:
@@ -58,7 +58,7 @@ class Effects(pygame.sprite.Sprite):
 
         self.compteur += 1
         if self.i>=0 and self.i!= 180 : 
-            self.i += 0.1
+            self.i += 0.02
             self.compteur = 0
         
         elif self.i== 180:
@@ -71,7 +71,7 @@ class Effects(pygame.sprite.Sprite):
 
         self.compteur += 1
         if self.i>=0 and self.i!= 180 : 
-            self.i += 0.1
+            self.i += 0.02
             self.compteur = 0
         
         elif self.i== 180:

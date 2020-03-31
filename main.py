@@ -98,74 +98,72 @@ while running:
     
     #Boost vitesse
     Compteur +=1
-    if Compteur >= 800:
-        if Compteur == 800 :
-            effet = randint(1,3)
+    if Compteur >= 4000:
+        if Compteur == 4000 :
+            effet = 1#randint(1,3)
         
         
         #vitesse
-        if effet == 1:
+        if effet == 1 or effet ==2:
+
+
             if Boost == False :
-                game.effects.boost_vitesse()
-                screen.blit(effects.im_vitesse, game.effects.rect_vitesse)
+                if effet == 1:
+                    game.effects.boost_vitesse()
+                    screen.blit(effects.im_vitesse, game.effects.rect_vitesse)
+                elif effet == 2:
+                    game.effects.jump_boost()
+                    screen.blit(effects.im_jump, game.effects.rect_jump)
+
             
             #Si on chope pas le boost
-            if Compteur >= 1000 and Boost == False:
+            if Compteur >= 4800 and Boost == False:
                 Compteur =0
                 Boost = False
         
             #Si on chope le boost :
-            if game.player.joueur.colliderect(game.effects.rect_vitesse):
-                Boost = True
-                StrEffects = font.render("Speed Boost !",1,(0,90,63))
+            if effet == 1:
+                if game.player.joueur.colliderect(game.effects.rect_vitesse):
+                    StrEffects = font.render("Speed Boost !",1,(0,90,63))
+                    Boost = True
+
+            elif effet == 2:
+                if game.player.joueur.colliderect(game.effects.rect_jump):
+                    Boost = True
+                    game.player.Jump_Boost = True
+                    StrEffects = font.render("Jump Boost !", 1, (177, 0, 250))
+
                 
             if Boost == True:
-                if compteur_temps_boost == 0:
-                    game.effects.rect_vitesse.x = randint(200,1400)
-                    game.effects.y_i= randint(100,580)
-                compteur_temps_boost +=1
-                game.player.vitesse = 12
+                if effet == 1:
+                    if compteur_temps_boost == 0:
+                        game.effects.rect_vitesse.x = randint(200,1400)
+                        game.effects.y_i= randint(100,580)
+                    game.player.vitesse = 5
+
+                elif effet == 2:
+                    if compteur_temps_boost == 0:
+                        game.effects.rect_jump.x = randint(200, 1400)
+                        game.effects.y_j = randint(100, 580)
+
+                compteur_temps_boost += 1
                 
-            if compteur_temps_boost >= 500:
+            if compteur_temps_boost >= 2000:
                 compteur_temps_boost = 0
                 Compteur =0
                 Boost = False
-                game.player.vitesse = 7
-                StrEffects = font.render("",1,(16,16,22))
-                
-            
-        
-        
-        #jump    
-        if effet == 2:
-            if Boost == False :
-                game.effects.jump_boost()
-                screen.blit(effects.im_jump, game.effects.rect_jump)
-            
-            #Si on chope pas le boost
-            if Compteur >= 1000 and Boost == False:
-                Compteur =0
-                Boost = False
-        
-            #Si on chope le boost :
-            if game.player.joueur.colliderect(game.effects.rect_jump):
-                Boost = True
-                game.player.Jump_Boost = True
-                StrEffects = font.render("Jump Boost !", 1, (177, 0, 250))
-                
-            if Boost == True:
-                if compteur_temps_boost == 0:
-                    game.effects.rect_jump.x = randint(200,1400)
-                    game.effects.y_j= randint(100,580)
-                compteur_temps_boost +=1
-                
-                if compteur_temps_boost >= 500:
-                    compteur_temps_boost = 0
-                    Compteur =0
-                    Boost = False
+                StrEffects = font.render("", 1, (16, 16, 22))
+                if effet ==1:
+                    game.player.vitesse = 3
+                elif effet == 2:
                     game.player.Jump_Boost = False
-                    game.player.saut= 30
-                    StrEffects = font.render("", 1, (16, 16, 22))
+                    game.player.saut = 0
+
+                
+            
+        
+        
+
 
         
         #mystere
@@ -175,7 +173,7 @@ while running:
                 screen.blit(effects.im_mystere, game.effects.rect_mystere)
             
             #Si on chope pas le boost
-            if Compteur >= 1000 and Boost == False:
+            if Compteur >= 4800 and Boost == False:
                 Compteur =0
                 Boost = False
         
@@ -204,21 +202,21 @@ while running:
                 
 
                 if mystere == 1 :
-                    game.gravite = 3
+                    game.gravite = 1
                     StrEffects = font.render("Gravité plus faible !", 1, (177, 0, 250))
                 
                 if mystere == 2 :
-                    game.gravite = 16
+                    game.gravite = 6
                     StrEffects = font.render("Gravité plus forte !", 1, (165, 0, 15))
 
                 if mystere == 3:
                     if tmp == 0:
                         tmp = game.enemy.vitesse
-                    game.enemy.vitesse = 4
+                    game.enemy.vitesse = 0.7
                     StrEffects = font.render("Papillon ralenti !", 1, (165, 0, 15))
 
                 if mystere == 4:
-                    game.player.vitesse = 3
+                    game.player.vitesse = 1
                     StrEffects = font.render("Vitesse ralentie !", 1, (165, 0, 15))
 
                 if mystere == 5:
@@ -234,19 +232,19 @@ while running:
                     StrEffects = font.render("Malus : - "+str(tmp)+"points !", 1, (165, 0, 15))
 
 
-                if compteur_temps_boost >= 500:
+                if compteur_temps_boost >= 2000:
                     compteur_temps_boost = 0
                     Compteur =0
                     Boost = False
                     
                     if mystere == 1 or mystere == 2 :
-                        game.gravite = 9
+                        game.gravite = 3
 
                     if mystere == 3:
                         game.enemy.vitesse = tmp
 
                     if mystere == 4:
-                        game.player.vitesse = 7
+                        game.player.vitesse = 3
 
                     tmp = 0
                     mystere = 0
@@ -305,10 +303,10 @@ while running:
         
     #Permettre double saut au perso
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_UP and game.player.double_saut<60:
+        if event.key == pygame.K_UP and game.player.double_saut<26:
             game.player.J_saute = True
     elif event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_UP and game.player.double_saut>60:
+        if event.key == pygame.K_UP and game.player.double_saut>26:
             game.player.J_saute = False
         
     if game.player.J_saute==True:
@@ -329,11 +327,11 @@ while running:
             or game.player.joueur.midbottom[1] // 10 * 10 == game.plateforme.plateforme_3.top and game.plateforme.plateforme_3.colliderect(game.player.joueur):
 
         if mystere == 1 and Boost == True :
-            game.resistance = -3
+            game.resistance = -1
         elif mystere == 2 and Boost == True :
-            game.resistance = -16
+            game.resistance = -6
         else :
-            game.resistance = -9
+            game.resistance = -3
         game.player.double_saut = 0
         collision_sol = True
     
