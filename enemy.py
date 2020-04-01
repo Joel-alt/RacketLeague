@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
         
         #coords+image enemy
-        self.im_enemy = pygame.image.load('assets/enemy.png')
+        self.im_enemy = pygame.image.load('assets/enemy.png').convert_alpha()
         self.enemy = self.im_enemy.get_rect()
         self.enemy.x=1200
         self.enemy.y=500
