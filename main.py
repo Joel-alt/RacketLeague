@@ -22,6 +22,7 @@ screen = pygame.display.set_mode((1600,800))
 
 #charger image arriere plan
 background=pygame.image.load('assets/bg2.png').convert()
+maison=pygame.image.load('assets/bg3.png').convert_alpha()
 
 
 
@@ -39,14 +40,19 @@ enemy = Enemy()
 #chargement effets
 effects = Effects()
 
+font=pygame.font.Font(None, 50)
 
-
+#PV Joueur
+PV = 10
+StrPV = font.render("PV : "+str(PV),1,(16,16,22))
 
 #Score Joueur
 score = 0
-font=pygame.font.Font(None, 50)
+
+
 #Texte score
 StrScore = font.render("Score : "+str(score),1,(16,16,22))
+
 #text effets
 StrEffects = font.render("",1,(16,16,22))
 
@@ -88,19 +94,22 @@ while running:
     
     
     
-    
+    #texte
 
     StrScore = font.render("Score : "+str(score),1,(16,16,22))
-    #texte
+    StrPV = font.render("PV : " + str(PV), 1, (16, 16, 22))
+
     screen.blit(StrScore, (10, 2))
+    screen.blit(StrPV, (10, 30))
+
     screen.blit(StrEffects, (700, 2))
     
     
     #Boost vitesse
     Compteur +=1
-    if Compteur >= 4000:
-        if Compteur == 4000 :
-            effet = 1#randint(1,3)
+    if Compteur >= 3000:
+        if Compteur == 3000 :
+            effet = randint(1,3)
         
         
         #vitesse
@@ -117,7 +126,7 @@ while running:
 
             
             #Si on chope pas le boost
-            if Compteur >= 4800 and Boost == False:
+            if Compteur >= 3800 and Boost == False:
                 Compteur =0
                 Boost = False
         
@@ -173,7 +182,7 @@ while running:
                 screen.blit(effects.im_mystere, game.effects.rect_mystere)
             
             #Si on chope pas le boost
-            if Compteur >= 4800 and Boost == False:
+            if Compteur >= 3800 and Boost == False:
                 Compteur =0
                 Boost = False
         
@@ -262,10 +271,13 @@ while running:
         game.enemy.enemy.x = 1700
         game.enemy.move()
 
-    
-    
-    
-    
+
+
+    #Afficher maison
+    screen.blit(maison, (0, 291))
+
+
+
     #Quitter la fenetre
     for event in pygame.event.get():
         #Si on appuie sur la croix pour quitter
@@ -289,13 +301,13 @@ while running:
         
         
     #Déplacement à gauche
-    if game.pressed.get(pygame.K_LEFT) and game.player.joueur.x > 0:
+    if game.pressed.get(pygame.K_LEFT) and game.player.joueur.x > 120:
         game.player.move_left()
 
 
     #descendre plateforme
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_DOWN and game.plateforme.plateforme_1.colliderect(game.player.joueur) \
+        if event.key == pygame.K_DOWN  and game.plateforme.plateforme_1.colliderect(game.player.joueur) \
             or event.key == pygame.K_DOWN and game.plateforme.plateforme_2.colliderect(game.player.joueur) \
             or event.key == pygame.K_DOWN and game.plateforme.plateforme_3.colliderect(game.player.joueur) :
             game.player.joueur.y += 2
@@ -303,10 +315,10 @@ while running:
         
     #Permettre double saut au perso
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_UP and game.player.double_saut<26:
+        if event.key == pygame.K_UP and game.player.double_saut<20:
             game.player.J_saute = True
     elif event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_UP and game.player.double_saut>26:
+        if event.key == pygame.K_UP and game.player.double_saut>20:
             game.player.J_saute = False
         
     if game.player.J_saute==True:
@@ -357,7 +369,9 @@ while running:
 
         score += 1
         game.enemy.move()
-    
+
+
+
     if event.type == MOUSEBUTTONDOWN and event.button == 1:
         print(event.pos[1])
         print(event.pos[0])

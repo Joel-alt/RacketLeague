@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         
         #coords+image joueur
-        self.im_joueur = pygame.image.load('assets/player.png')
+        self.im_joueur = pygame.image.load('assets/player.png').convert_alpha()
         self.joueur = self.im_joueur.get_rect()
         self.joueur.x=400
         self.joueur.y=000
