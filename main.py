@@ -15,26 +15,17 @@ pygame.init()
 #Titre fenetre
 pygame.display.set_caption("VR7")
 #Taille fenetre
-screen = pygame.display.set_mode((1600,800))
+screen = pygame.display.set_mode((1600,950))
 #pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
 
 
-#charger image arriere plan
+#charger images arriere plan
 background=pygame.image.load('assets/bg2.png').convert()
 bgOver=pygame.image.load('assets/bg1.png').convert_alpha()
 maison=pygame.image.load('assets/bg3.png').convert_alpha()
 
-BoutonQuitter=pygame.image.load('assets/Quit_0.png').convert_alpha()
-bouton_rect_Q = BoutonQuitter.get_rect()
-bouton_rect_Q.x = 350
-bouton_rect_Q.y = 600
-
-BoutonTryAgain=pygame.image.load('assets/TryAgain_0.png').convert_alpha()
-bouton_rect_T = BoutonTryAgain.get_rect()
-bouton_rect_T.x = 850
-bouton_rect_T.y = 600
 
 
 #chargement classe Player(), etc...
@@ -81,10 +72,276 @@ mystere = 0
 tmp = 0
 
 
+#############################################
+#MENU
+x=0
+y=0
+Menu = True
+options = False
+bouton_down = False
+NiveauVolume = 1
+NiveauDifficulté = 0
+menu_bg =pygame.image.load('assets/bg_menu.png').convert_alpha()
+
+#JOUER
+bouton_jouer =pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
+bouton_jouer_rect = bouton_jouer.get_rect()
+bouton_jouer_rect.x = 400
+bouton_jouer_rect.y = 300
+
+#OPTIONS
+bouton_options =pygame.image.load('assets/bouton_options_off.png').convert_alpha()
+bouton_options_rect = bouton_options.get_rect()
+bouton_options_rect.x = 380
+bouton_options_rect.y = 450
+
+#QUITTER
+bouton_quitter=pygame.image.load('assets/bouton_quitter_off.png').convert_alpha()
+bouton_quitter_rect = bouton_quitter.get_rect()
+bouton_quitter_rect.x = 820
+bouton_quitter_rect.y = 450
+
+#RETRY
+bouton_rejouer=pygame.image.load('assets/bouton_rejouer_off.png').convert_alpha()
+bouton_rejouer_rect = bouton_rejouer.get_rect()
+bouton_rejouer_rect.x = 380
+bouton_rejouer_rect.y = 600
+
+#VOLUME
+bouton_volume=pygame.image.load('assets/bouton_volume_10.png').convert_alpha()
+bouton_volume_rect = bouton_volume.get_rect()
+bouton_volume_rect.x = 380
+bouton_volume_rect.y = 450
+
+#VOLUME PLUS
+bouton_volume_plus=pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
+bouton_volume_plus_rect = bouton_volume_plus.get_rect()
+bouton_volume_plus_rect.x = 767
+bouton_volume_plus_rect.y = 468
+
+#VOLUME MOINS
+bouton_volume_moins=pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
+bouton_volume_moins_rect = bouton_volume_moins.get_rect()
+bouton_volume_moins_rect.x = 385
+bouton_volume_moins_rect.y = 468
+
+#DIFFICULTE
+bouton_difficulté=pygame.image.load('assets/bouton_difficulté_0.png').convert_alpha()
+bouton_difficulté_rect = bouton_difficulté.get_rect()
+bouton_difficulté_rect.x = 820
+bouton_difficulté_rect.y = 450
+
+#VOLUME PLUS
+bouton_difficulté_plus=pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
+bouton_difficulté_plus_rect = bouton_difficulté_plus.get_rect()
+bouton_difficulté_plus_rect.x = 1207
+bouton_difficulté_plus_rect.y = 468
+
+#VOLUME MOINS
+bouton_difficulté_moins=pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
+bouton_difficulté_moins_rect = bouton_difficulté_moins.get_rect()
+bouton_difficulté_moins_rect.x = 825
+bouton_difficulté_moins_rect.y = 468
+
+#RETOUR
+bouton_retour =pygame.image.load('assets/bouton_retour_off.png').convert_alpha()
+bouton_retour_rect=bouton_retour.get_rect()
+bouton_retour_rect.x = 400
+bouton_retour_rect.y = 300
 
 #Boucle fenetre, ( donc running = True)
 while running:
-    if PV != 0:
+
+
+
+
+############################################################################################
+                                        #MENU
+############################################################################################
+
+
+
+
+    if Menu == True :
+        pygame.display.flip()
+
+        # background
+        screen.blit(background, (0, 0))
+        screen.blit(menu_bg, (0, 0))
+
+        if options == False:
+
+            screen.blit(bouton_jouer, bouton_jouer_rect)
+            screen.blit(bouton_options, bouton_options_rect)
+            screen.blit(bouton_quitter, bouton_quitter_rect)
+
+        elif options == True:
+            #volume
+            screen.blit(bouton_volume, bouton_volume_rect)
+            screen.blit(bouton_volume_plus, bouton_volume_plus_rect)
+            screen.blit(bouton_volume_moins, bouton_volume_moins_rect)
+
+            #difficulté
+            screen.blit(bouton_difficulté, bouton_difficulté_rect)
+            screen.blit(bouton_difficulté_plus, bouton_difficulté_plus_rect)
+            screen.blit(bouton_difficulté_moins, bouton_difficulté_moins_rect)
+
+            screen.blit(bouton_retour, bouton_retour_rect)
+
+
+
+        ## Si le focus est sur la fenêtre.
+        if pygame.mouse.get_focused():
+            ## Trouve position de la souris
+            x, y = pygame.mouse.get_pos()
+
+################## BOUTONS #############################
+
+
+
+
+
+
+
+
+
+
+
+
+        if options == False:
+
+            #########################               BOUTON QUITTER
+            if bouton_quitter_rect.collidepoint(x, y):
+                bouton_quitter = pygame.image.load('assets/bouton_quitter_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    # alors runnig = False
+                    running = False
+                    # et la fenetre se ferme.
+                    pygame.quit()
+            elif not bouton_quitter_rect.collidepoint(x, y):
+                bouton_quitter = pygame.image.load('assets/bouton_quitter_off.png').convert_alpha()
+
+            #######################             BOUTON JOUER
+            if bouton_jouer_rect.collidepoint(x, y):
+                bouton_jouer = pygame.image.load('assets/bouton_jouer_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
+                    bouton_down = True
+                    # ALORS ON JOUE
+                    Menu = False
+            elif not bouton_jouer_rect.collidepoint(x, y):
+                bouton_jouer = pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
+
+            #########################               BOUTON OPTIONS
+            if bouton_options_rect.collidepoint(x, y):
+                bouton_options = pygame.image.load('assets/bouton_options_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    # ALORS ON ACCEDE AUX OPTIONS
+                    options = True
+            elif not bouton_options_rect.collidepoint(x, y):
+                bouton_options = pygame.image.load('assets/bouton_options_off.png').convert_alpha()
+
+
+
+        else:
+
+             #########################               BOUTON VOLUME PLUS
+            if bouton_volume_plus_rect.collidepoint(x, y):
+                bouton_volume_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if NiveauVolume < 1 and bouton_down == False:
+                        bouton_down = True
+                        NiveauVolume += 0.1
+                    bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(NiveauVolume*10))+'.png').convert_alpha()
+                        #Augmenter Volume aussi
+            elif not bouton_volume_plus_rect.collidepoint(x, y):
+                bouton_volume_plus = pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
+
+            #########################               BOUTON VOLUME MOINS
+            if bouton_volume_moins_rect.collidepoint(x, y):
+                bouton_volume_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if NiveauVolume > 0 and bouton_down == False:
+                        bouton_down = True
+                        NiveauVolume -= 0.1
+                    bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(NiveauVolume*10))+'.png').convert_alpha()
+                # réduire Volume aussi
+            elif not bouton_volume_moins_rect.collidepoint(x, y):
+                bouton_volume_moins = pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
+
+
+
+
+
+
+
+
+            #########################               BOUTON DIFFICULTE PLUS
+            if bouton_difficulté_plus_rect.collidepoint(x, y):
+                bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if NiveauDifficulté < 3 and bouton_down == False:
+                        bouton_down = True
+                        NiveauDifficulté += 1
+                        print(NiveauDifficulté)
+                    bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
+                # REDUIRE DIFFICLUTE
+            elif not bouton_volume_moins_rect.collidepoint(x, y):
+                bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
+
+
+
+            #########################               BOUTON DIFFICULTE MOINS
+            if bouton_difficulté_moins_rect.collidepoint(x, y):
+                bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if NiveauDifficulté > 0 and bouton_down == False:
+                        bouton_down = True
+                        NiveauDifficulté -= 1
+                    bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
+                        # REDUIRE DIFFICLUTE
+            elif not bouton_volume_moins_rect.collidepoint(x, y):
+                bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
+
+
+            #########################               BOUTON RETOUR MENU
+            if bouton_retour_rect.collidepoint(x,y):
+                bouton_retour =  pygame.image.load('assets/bouton_retour_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and bouton_down == False:
+                    bouton_down = True
+                    options = False
+            elif not bouton_retour_rect.collidepoint(x,y):
+                bouton_retour = pygame.image.load('assets/bouton_retour_off.png').convert_alpha()
+
+
+
+        # Quitter la fenetre
+        for event in pygame.event.get():
+            # Si on appuie sur la croix pour quitter
+            if event.type == pygame.QUIT:
+                # alors runnig = False
+                running = False
+                # et la fenetre se ferme.
+                pygame.quit()
+
+
+        #Permet de cliquer 1 par 1 (pour le volume)
+        if event.type == MOUSEBUTTONUP and event.button == 1:
+            bouton_down = False
+
+        if event.type == MOUSEBUTTONDOWN and event.button == 1:
+            print(event.pos[1])
+            print(event.pos[0])
+
+
+############################################################################################
+                                        #JEU
+############################################################################################
+
+
+
+
+
+    if PV != 0 and Menu == False :
         #mise a jour ecran
         pygame.display.flip()
         #gravité dans le jeu
@@ -390,7 +647,19 @@ while running:
 
 
 
+############################################################################################
+                                        #PERDU
+############################################################################################
+
+
+
+
+
     if PV == 0 :
+
+        bouton_quitter_rect.x = 820
+        bouton_quitter_rect.y = 600
+
 
         # mise a jour ecran
         pygame.display.flip()
@@ -421,20 +690,16 @@ while running:
 
         #ecran game over
         screen.blit(bgOver, (0, 0))
-        screen.blit(BoutonQuitter, bouton_rect_Q)
-        screen.blit(BoutonTryAgain, bouton_rect_T)
+        screen.blit(bouton_quitter, bouton_quitter_rect)
+        screen.blit(bouton_rejouer, bouton_rejouer_rect)
 
         ## Si le focus est sur la fenêtre.
         if pygame.mouse.get_focused():
             ## Trouve position de la souris
             x, y = pygame.mouse.get_pos()
 
-            ## S'il y a collision:
-            collideQ = bouton_rect_Q.collidepoint(x, y)
-            collideC = bouton_rect_T.collidepoint(x, y)
-
-            if collideC:
-                BoutonTryAgain = pygame.image.load('assets/TryAgain_1.png').convert_alpha()
+            if bouton_rejouer_rect.collidepoint(x, y):
+                bouton_rejouer=pygame.image.load('assets/bouton_rejouer_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     PV = 1
                     score = 0
@@ -453,20 +718,18 @@ while running:
                     mystere = 0
                     StrEffects = font.render("", 1, (16, 16, 22))
 
-            elif not collideC:
-                BoutonTryAgain = pygame.image.load('assets/TryAgain_0.png').convert_alpha()
+            elif not bouton_rejouer_rect.collidepoint(x, y):
+                bouton_rejouer=pygame.image.load('assets/bouton_rejouer_off.png').convert_alpha()
 
-
-            if collideQ:
-                BoutonQuitter = pygame.image.load('assets/Quit_1.png').convert_alpha()
+            if bouton_quitter_rect.collidepoint(x, y):
+                bouton_quitter = pygame.image.load('assets/bouton_quitter_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     # alors runnig = False
                     running = False
                     # et la fenetre se ferme.
                     pygame.quit()
-            elif not collideQ:
-                BoutonQuitter = pygame.image.load('assets/Quit_0.png').convert_alpha()
-
+            elif not bouton_quitter_rect.collidepoint(x, y):
+                bouton_quitter = pygame.image.load('assets/bouton_quitter_off.png').convert_alpha()
 
         # Quitter la fenetre
         for event in pygame.event.get():
