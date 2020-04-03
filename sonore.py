@@ -13,6 +13,7 @@ class Sonore:
         self.speed_sound = pygame.mixer.Sound("sons/speed.ogg")
         self.jump_boost_sound = pygame.mixer.Sound("sons/jump_boost.ogg")
         self.random_effects_sound = pygame.mixer.Sound("sons/random_effects.ogg")
+        self.lose_PV_sound = pygame.mixer.Sound("sons/lose_PV.ogg")
 
         self.jump_sound = pygame.mixer.Sound("sons/jump.ogg")
         self.swoosh_sound = pygame.mixer.Sound("sons/swoosh.ogg")
@@ -40,4 +41,4 @@ class Sonore:
         self.menu_sound.set_volume(self.NiveauVolume)
         self.pop_up_sound.set_volume(self.NiveauVolume)
         self.clic_sound.set_volume(self.NiveauVolume)
-
+        self.lose_PV_sound.set_volume(self.NiveauVolume)

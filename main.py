@@ -18,7 +18,7 @@ pygame.init()
 #Titre fenetre
 pygame.display.set_caption("VR7")
 #Taille fenetre
-screen = pygame.display.set_mode((1600,950))
+screen = pygame.display.set_mode((1600,950),pygame.FULLSCREEN)
 #pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
@@ -49,7 +49,8 @@ sonore = Sonore()
 font=pygame.font.Font(None, 50)
 
 #PV Joueur
-PV = 1
+PV = 10
+music_1PV = False
 StrPV = font.render("PV : "+str(PV),1,(16,16,22))
 
 #Score Joueur
@@ -86,6 +87,7 @@ options = False
 bouton_down = False
 NiveauDifficulté = 0
 menu_bg =pygame.image.load('assets/bg_menu.png').convert_alpha()
+Niveau = pygame.image.load('assets/niveau_1.png').convert_alpha()
 
 #JOUER
 bouton_jouer =pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
@@ -229,6 +231,23 @@ while running:
             ## Trouve position de la souris
             x, y = pygame.mouse.get_pos()
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ################## BOUTONS #############################
 
 
@@ -356,6 +375,22 @@ while running:
                     bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
 
 
+
+                if NiveauDifficulté == 0:
+                    PV = 10
+                    game.enemy.vitesse == 1
+                elif NiveauDifficulté == 1:
+                    PV = 10
+                    game.enemy.vitesse = 2
+                elif NiveauDifficulté == 2:
+                    PV = 5
+                    game.enemy.vitesse = 5
+                elif NiveauDifficulté == 3:
+                    PV = 1
+                    game.enemy.vitesse = 5
+
+
+
             #########################               BOUTON RETOUR MENU
             if bouton_retour_rect.collidepoint(x,y):
                 bouton_retour =  pygame.image.load('assets/bouton_retour_on.png').convert_alpha()
@@ -412,6 +447,8 @@ while running:
         screen.blit(plateforme.im_plateforme, game.plateforme.plateforme_3)
         #image joueur
         screen.blit(player.im_joueur, game.player.joueur)
+        #image niveau
+        screen.blit(Niveau,(0,60))
 
 
         #texte
@@ -426,7 +463,7 @@ while running:
 
 
         #music
-        if music_jeu == False:
+        if music_jeu == False :
             music_jeu = True
             game.sonore.menu_sound.stop()
             if NiveauDifficulté == 3:
@@ -435,6 +472,14 @@ while running:
             else :
                 game.sonore.music_jeu_normal.play(200,0,3000)
                 game.sonore.music_jeu_hard.stop()
+
+        if NiveauDifficulté !=3 and PV == 1 and music_1PV == False:
+            game.sonore.music_jeu_hard.play()
+            game.sonore.music_jeu_normal.stop()
+            music_1PV = True
+
+
+
 
 
 
@@ -563,8 +608,9 @@ while running:
                     if mystere == 3:
                         if tmp == 0:
                             tmp = game.enemy.vitesse
-                        game.enemy.vitesse = 0.7
+                            game.enemy.vitesse = 1
                         StrEffects = font.render("Papillon ralenti !", 1, (165, 0, 15))
+
 
                     if mystere == 4:
                         game.player.vitesse = 1
@@ -603,7 +649,6 @@ while running:
 
 
         #Si le papillon quitte la fenetre == il atteint l'objectif
-
         if game.enemy.enemy.x > -50:
             game.enemy.move()
             #image enemy
@@ -612,6 +657,7 @@ while running:
 
             game.enemy.enemy.x = randint(1700,2000)
             PV -= 1
+            game.sonore.lose_PV_sound.play()
             if PV == 0:
                 game.sonore.son_loser = True
             game.enemy.move()
@@ -699,33 +745,39 @@ while running:
 
         #Si on attrape un papillon
 
-        if game.enemy.enemy.y <= game.player.joueur.midright[1] and game.enemy.enemy.y >= game.player.joueur.topright[1] and game.player.joueur.colliderect(game.enemy.enemy) :
+        if game.enemy.enemy.y <= game.player.joueur.midright[1] and game.enemy.enemy.y >= game.player.joueur.top and game.player.joueur.colliderect(game.enemy.enemy) :
             game.sonore.swoosh_sound.play()
             game.enemy.enemy.x = randint(1700, 2200)
             game.enemy.y_e = randint(100,600)
             game.enemy.amplitude = randint(10,150)
 
             #Difficultés
-            if NiveauDifficulté == 0:
-                PV = 10
-                if score == 10 :
-                    #afficher niveau 1
-                    #afficher niveau 2
-                    #afficher niveau 3
-                    #afficher niveau 4
-                    #afficher niveau 5
-                    game.enemy.vitesse +=1
-            if score == 15 or score == 20 or score >= 25:
-                game.enemy.vitesse +=2
+            if score == 5:
+                Niveau = pygame.image.load('assets/niveau_1.png').convert_alpha()
+                game.enemy.vitesse += 1
+            elif score == 10:
+                Niveau = pygame.image.load('assets/niveau_2.png').convert_alpha()
+                game.enemy.vitesse += 1
+            elif score == 15:
+                Niveau = pygame.image.load('assets/niveau_3.png').convert_alpha()
+                game.enemy.vitesse += 1
+            elif score == 25:
+                Niveau = pygame.image.load('assets/niveau_4.png').convert_alpha()
+                game.enemy.vitesse += 1
+            elif score >= 40:
+                Niveau = pygame.image.load('assets/niveau_5.png').convert_alpha()
+                game.enemy.vitesse += 1
+
 
             score += 1
+            screen.blit(Niveau,(0,60))
             game.enemy.move()
 
 
 
-        if event.type == MOUSEBUTTONDOWN and event.button == 1:
+        """if event.type == MOUSEBUTTONDOWN and event.button == 1:
             print(event.pos[1])
-            print(event.pos[0])
+            print(event.pos[0])"""
 
 
 
@@ -802,11 +854,23 @@ while running:
                 if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
                     bouton_down = True
                     game.sonore.clic_sound.play()
-                    PV = 1
+                    print(NiveauDifficulté)
+                    if NiveauDifficulté == 0:
+                        PV = 10
+                        game.enemy.vitesse == 1
+                    elif NiveauDifficulté == 1:
+                        PV = 10
+                        game.enemy.vitesse = 2
+                    elif NiveauDifficulté == 2:
+                        PV = 5
+                        game.enemy.vitesse = 5
+                    elif NiveauDifficulté == 3:
+                        PV = 1
+                        game.enemy.vitesse = 5
+                    music_1PV=False
                     score = 0
                     game.player.joueur.x = 400
                     game.player.joueur.y = 0
-                    game.enemy.vitesse = 1
                     Compteur = 600
                     game.pressed ={}
                     compteur_temps_boost = 0
