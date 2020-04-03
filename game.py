@@ -4,6 +4,7 @@ from sol import Sol
 from enemy import Enemy
 from effects import Effects
 from plateforme import Plateforme
+from sonore import Sonore
 
 
 #class jeu
@@ -20,6 +21,8 @@ class Game:
         self.effects = Effects()
         #chargement plateforme
         self.plateforme = Plateforme()
+        #chargement sonore
+        self.sonore = Sonore()
         
         
         #définir pressed

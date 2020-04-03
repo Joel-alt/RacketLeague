@@ -8,8 +8,11 @@ from sol import Sol
 from enemy import Enemy
 from effects import Effects
 from plateforme import Plateforme
+from sonore import Sonore
 
+pygame.mixer.pre_init(44100,-16,2,2048)
 pygame.init()
+
 
 
 #Titre fenetre
@@ -40,6 +43,8 @@ plateforme = Plateforme()
 enemy = Enemy()
 #chargement effets
 effects = Effects()
+#chargement sonor
+sonore = Sonore()
 
 font=pygame.font.Font(None, 50)
 
@@ -49,7 +54,6 @@ StrPV = font.render("PV : "+str(PV),1,(16,16,22))
 
 #Score Joueur
 score = 0
-
 
 #Texte score
 StrScore = font.render("Score : "+str(score),1,(16,16,22))
@@ -77,9 +81,9 @@ tmp = 0
 x=0
 y=0
 Menu = True
+Jeu_lancé = False
 options = False
 bouton_down = False
-NiveauVolume = 1
 NiveauDifficulté = 0
 menu_bg =pygame.image.load('assets/bg_menu.png').convert_alpha()
 
@@ -149,6 +153,24 @@ bouton_retour_rect=bouton_retour.get_rect()
 bouton_retour_rect.x = 400
 bouton_retour_rect.y = 300
 
+
+
+
+
+
+
+
+
+########################################################################################
+                   # MUSIQUE
+
+music_menu = False
+music_jeu = False
+game.sonore.Volume()
+
+
+
+
 #Boucle fenetre, ( donc running = True)
 while running:
 
@@ -158,12 +180,23 @@ while running:
 ############################################################################################
                                         #MENU
 ############################################################################################
-
-
+    pygame.display.flip()
+    # Quitter la fenetre
+    for event in pygame.event.get():
+        # Si on appuie sur la croix pour quitter
+        if event.type == pygame.QUIT:
+            # alors runnig = False
+            running = False
+            # et la fenetre se ferme.
+            pygame.quit()
 
 
     if Menu == True :
-        pygame.display.flip()
+
+        ################################         LANCEMENT MUSIQUE
+        if music_menu == False:
+            music_menu = True
+            game.sonore.menu_sound.play(100,0,5000)
 
         # background
         screen.blit(background, (0, 0))
@@ -183,8 +216,9 @@ while running:
 
             #difficulté
             screen.blit(bouton_difficulté, bouton_difficulté_rect)
-            screen.blit(bouton_difficulté_plus, bouton_difficulté_plus_rect)
-            screen.blit(bouton_difficulté_moins, bouton_difficulté_moins_rect)
+            if Jeu_lancé == False :
+                screen.blit(bouton_difficulté_plus, bouton_difficulté_plus_rect)
+                screen.blit(bouton_difficulté_moins, bouton_difficulté_moins_rect)
 
             screen.blit(bouton_retour, bouton_retour_rect)
 
@@ -211,9 +245,13 @@ while running:
         if options == False:
 
             #########################               BOUTON QUITTER
+            bouton_quitter_rect.x = 820
+            bouton_quitter_rect.y = 450
             if bouton_quitter_rect.collidepoint(x, y):
                 bouton_quitter = pygame.image.load('assets/bouton_quitter_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == MOUSEBUTTONDOWN and event.button == 1and bouton_down == False:
+                    bouton_down = True
+                    game.sonore.clic_sound.play()
                     # alors runnig = False
                     running = False
                     # et la fenetre se ferme.
@@ -221,20 +259,37 @@ while running:
             elif not bouton_quitter_rect.collidepoint(x, y):
                 bouton_quitter = pygame.image.load('assets/bouton_quitter_off.png').convert_alpha()
 
+            if Jeu_lancé == False:
+                bouton_jouer = pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
+            else:
+                bouton_jouer = pygame.image.load('assets/bouton_retour_off.png').convert_alpha()
+
+
             #######################             BOUTON JOUER
             if bouton_jouer_rect.collidepoint(x, y):
-                bouton_jouer = pygame.image.load('assets/bouton_jouer_on.png').convert_alpha()
+                if Jeu_lancé == False:
+                    bouton_jouer = pygame.image.load('assets/bouton_jouer_on.png').convert_alpha()
+                else :
+                    bouton_jouer = pygame.image.load('assets/bouton_retour_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
+                    game.sonore.clic_sound.play()
                     bouton_down = True
                     # ALORS ON JOUE
                     Menu = False
+                    music_menu = False
+                    Jeu_lancé = True
             elif not bouton_jouer_rect.collidepoint(x, y):
-                bouton_jouer = pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
+                if Jeu_lancé == False:
+                    bouton_jouer = pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
+                else:
+                    bouton_jouer = pygame.image.load('assets/bouton_retour_off.png').convert_alpha()
 
             #########################               BOUTON OPTIONS
-            if bouton_options_rect.collidepoint(x, y):
+            if bouton_options_rect.collidepoint(x, y) :
                 bouton_options = pygame.image.load('assets/bouton_options_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
+                    bouton_down = True
+                    game.sonore.clic_sound.play()
                     # ALORS ON ACCEDE AUX OPTIONS
                     options = True
             elif not bouton_options_rect.collidepoint(x, y):
@@ -248,11 +303,12 @@ while running:
             if bouton_volume_plus_rect.collidepoint(x, y):
                 bouton_volume_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if NiveauVolume < 1 and bouton_down == False:
+                    if game.sonore.NiveauVolume < 1 and bouton_down == False:
                         bouton_down = True
-                        NiveauVolume += 0.1
-                    bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(NiveauVolume*10))+'.png').convert_alpha()
-                        #Augmenter Volume aussi
+                        game.sonore.NiveauVolume += 0.1
+                        game.sonore.Volume()
+                        game.sonore.pop_up_sound.play()
+                    bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(game.sonore.NiveauVolume*10))+'.png').convert_alpha()
             elif not bouton_volume_plus_rect.collidepoint(x, y):
                 bouton_volume_plus = pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
 
@@ -260,57 +316,58 @@ while running:
             if bouton_volume_moins_rect.collidepoint(x, y):
                 bouton_volume_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if NiveauVolume > 0 and bouton_down == False:
+                    if game.sonore.NiveauVolume > 0 and bouton_down == False:
                         bouton_down = True
-                        NiveauVolume -= 0.1
-                    bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(NiveauVolume*10))+'.png').convert_alpha()
+                        game.sonore.NiveauVolume -= 0.1
+                        game.sonore.Volume()
+                        game.sonore.pop_up_sound.play()
+                    bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(game.sonore.NiveauVolume*10))+'.png').convert_alpha()
                 # réduire Volume aussi
             elif not bouton_volume_moins_rect.collidepoint(x, y):
                 bouton_volume_moins = pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
 
+            if Jeu_lancé == False:
+                #########################               BOUTON DIFFICULTE PLUS
+                if bouton_difficulté_plus_rect.collidepoint(x, y):
+                    bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
+                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        if NiveauDifficulté < 3 and bouton_down == False:
+                            game.sonore.clic_sound.play()
+                            bouton_down = True
+                            NiveauDifficulté += 1
+                        bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
+                    # REDUIRE DIFFICLUTE
+                elif not bouton_volume_moins_rect.collidepoint(x, y):
+                    bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
 
 
 
-
-
-
-
-            #########################               BOUTON DIFFICULTE PLUS
-            if bouton_difficulté_plus_rect.collidepoint(x, y):
-                bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if NiveauDifficulté < 3 and bouton_down == False:
-                        bouton_down = True
-                        NiveauDifficulté += 1
-                        print(NiveauDifficulté)
-                    bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
-                # REDUIRE DIFFICLUTE
-            elif not bouton_volume_moins_rect.collidepoint(x, y):
-                bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
-
-
-
-            #########################               BOUTON DIFFICULTE MOINS
-            if bouton_difficulté_moins_rect.collidepoint(x, y):
-                bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if NiveauDifficulté > 0 and bouton_down == False:
-                        bouton_down = True
-                        NiveauDifficulté -= 1
-                    bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
-                        # REDUIRE DIFFICLUTE
-            elif not bouton_volume_moins_rect.collidepoint(x, y):
-                bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
+                #########################               BOUTON DIFFICULTE MOINS
+                if bouton_difficulté_moins_rect.collidepoint(x, y):
+                    bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
+                    if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                        if NiveauDifficulté > 0 and bouton_down == False:
+                            game.sonore.clic_sound.play()
+                            bouton_down = True
+                            NiveauDifficulté -= 1
+                        bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
+                            # REDUIRE DIFFICLUTE
+                elif not bouton_volume_moins_rect.collidepoint(x, y):
+                    bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_off.png').convert_alpha()
 
 
             #########################               BOUTON RETOUR MENU
             if bouton_retour_rect.collidepoint(x,y):
                 bouton_retour =  pygame.image.load('assets/bouton_retour_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and bouton_down == False:
+                    game.sonore.clic_sound.play()
                     bouton_down = True
                     options = False
             elif not bouton_retour_rect.collidepoint(x,y):
                 bouton_retour = pygame.image.load('assets/bouton_retour_off.png').convert_alpha()
+
+
+
 
 
 
@@ -324,13 +381,11 @@ while running:
                 pygame.quit()
 
 
-        #Permet de cliquer 1 par 1 (pour le volume)
-        if event.type == MOUSEBUTTONUP and event.button == 1:
-            bouton_down = False
 
-        if event.type == MOUSEBUTTONDOWN and event.button == 1:
+
+        """if event.type == MOUSEBUTTONDOWN and event.button == 1:
             print(event.pos[1])
-            print(event.pos[0])
+            print(event.pos[0])"""
 
 
 ############################################################################################
@@ -342,8 +397,7 @@ while running:
 
 
     if PV != 0 and Menu == False :
-        #mise a jour ecran
-        pygame.display.flip()
+
         #gravité dans le jeu
         game.gravite_jeu()
 
@@ -371,10 +425,26 @@ while running:
         screen.blit(StrEffects, (700, 2))
 
 
+        #music
+        if music_jeu == False:
+            music_jeu = True
+            game.sonore.menu_sound.stop()
+            if NiveauDifficulté == 3:
+                game.sonore.music_jeu_hard.play(200,0,3000)
+                game.sonore.music_jeu_normal.stop()
+            else :
+                game.sonore.music_jeu_normal.play(200,0,3000)
+                game.sonore.music_jeu_hard.stop()
+
+
+
+
+
+
         #Boost vitesse
         Compteur +=1
-        if Compteur >= 3000:
-            if Compteur == 3000 :
+        if Compteur >= 1600:
+            if Compteur == 1600 :
                 effet = randint(1,3)
 
 
@@ -392,18 +462,22 @@ while running:
 
 
                 #Si on chope pas le boost
-                if Compteur >= 3800 and Boost == False:
+                if Compteur >= 2600 and Boost == False:
                     Compteur =0
                     Boost = False
 
                 #Si on chope le boost :
                 if effet == 1:
                     if game.player.joueur.colliderect(game.effects.rect_vitesse):
+                        if Boost == False:
+                            game.sonore.speed_sound.play()
                         StrEffects = font.render("Speed Boost !",1,(0,90,63))
                         Boost = True
 
                 elif effet == 2:
                     if game.player.joueur.colliderect(game.effects.rect_jump):
+                        if Boost == False:
+                            game.sonore.jump_boost_sound.play()
                         Boost = True
                         game.player.Jump_Boost = True
                         StrEffects = font.render("Jump Boost !", 1, (177, 0, 250))
@@ -448,18 +522,20 @@ while running:
                     screen.blit(effects.im_mystere, game.effects.rect_mystere)
 
                 #Si on chope pas le boost
-                if Compteur >= 3800 and Boost == False:
+                if Compteur >= 2600 and Boost == False:
                     Compteur =0
                     Boost = False
 
                 #Si on chope le boost :
                 if game.player.joueur.colliderect(game.effects.rect_mystere):
+                    if Boost == False:
+                        game.sonore.random_effects_sound.play()
                     Boost = True
 
                 if Boost == True:
                     if compteur_temps_boost == 0:
                         game.effects.rect_mystere.x = randint(200,1400)
-                        game.effects.y_m= randint(100,580)
+                        game.effects.y_m= randint(100,680)
                         mystere = randint(1,6)
                     compteur_temps_boost +=1
 
@@ -536,6 +612,8 @@ while running:
 
             game.enemy.enemy.x = randint(1700,2000)
             PV -= 1
+            if PV == 0:
+                game.sonore.son_loser = True
             game.enemy.move()
 
 
@@ -546,21 +624,9 @@ while running:
 
 
 
-        #Quitter la fenetre
-        for event in pygame.event.get():
-            #Si on appuie sur la croix pour quitter
-            if event.type == pygame.QUIT:
-                #alors runnig = False
-                running= False
-                #et la fenetre se ferme.
-                pygame.quit()
 
 
 
-
-
-
-        #Déplacements à droite
 
         #Déplacement à droite
         if game.pressed.get(pygame.K_RIGHT) and game.player.joueur.x <1550:
@@ -573,19 +639,28 @@ while running:
             game.player.move_left()
 
 
-        #descendre plateforme
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN and collision_sol == False:
-                game.player.joueur.y += 2
-
 
         #Permettre double saut au perso
         if event.type == pygame.KEYDOWN:
+            #Descendre
+            if event.key == pygame.K_DOWN and collision_sol == False:
+                game.player.joueur.y += 2
+
+            #Sauter
             if event.key == pygame.K_UP and game.player.double_saut<20:
                 game.player.J_saute = True
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and game.player.double_saut>20:
+                if game.player.saut == 10:
+                    game.sonore.jump_sound.play()
+            #Deux sauts
+            elif event.key == pygame.K_UP and game.player.double_saut>20:
                 game.player.J_saute = False
+
+            #Echap
+            if event.key == pygame.K_ESCAPE:
+                Menu = True
+                music_jeu = False
+                game.sonore.music_jeu_normal.stop()
+                game.sonore.music_jeu_hard.stop()
 
         if game.player.J_saute==True:
             game.player.sauter()
@@ -625,13 +700,21 @@ while running:
         #Si on attrape un papillon
 
         if game.enemy.enemy.y <= game.player.joueur.midright[1] and game.enemy.enemy.y >= game.player.joueur.topright[1] and game.player.joueur.colliderect(game.enemy.enemy) :
-
+            game.sonore.swoosh_sound.play()
             game.enemy.enemy.x = randint(1700, 2200)
             game.enemy.y_e = randint(100,600)
             game.enemy.amplitude = randint(10,150)
 
-            if score == 2 or score == 6 or score == 10:
-                game.enemy.vitesse +=1
+            #Difficultés
+            if NiveauDifficulté == 0:
+                PV = 10
+                if score == 10 :
+                    #afficher niveau 1
+                    #afficher niveau 2
+                    #afficher niveau 3
+                    #afficher niveau 4
+                    #afficher niveau 5
+                    game.enemy.vitesse +=1
             if score == 15 or score == 20 or score >= 25:
                 game.enemy.vitesse +=2
 
@@ -656,6 +739,22 @@ while running:
 
 
     if PV == 0 :
+
+
+        if game.sonore.son_loser == True :
+            game.sonore.son_loser = False
+            music_menu = True
+            music_jeu =False
+            game.sonore.music_jeu_normal.stop()
+            game.sonore.music_jeu_hard.stop()
+            game.sonore.menu_sound.play(0,0,3000)
+            GO = randint(1,2)
+            if GO == 1:
+                game.sonore.game_over_1_sound.play()
+            elif GO == 2:
+                game.sonore.game_over_2_sound.play()
+
+
 
         bouton_quitter_rect.x = 820
         bouton_quitter_rect.y = 600
@@ -700,7 +799,9 @@ while running:
 
             if bouton_rejouer_rect.collidepoint(x, y):
                 bouton_rejouer=pygame.image.load('assets/bouton_rejouer_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
+                    bouton_down = True
+                    game.sonore.clic_sound.play()
                     PV = 1
                     score = 0
                     game.player.joueur.x = 400
@@ -731,13 +832,6 @@ while running:
             elif not bouton_quitter_rect.collidepoint(x, y):
                 bouton_quitter = pygame.image.load('assets/bouton_quitter_off.png').convert_alpha()
 
-        # Quitter la fenetre
-        for event in pygame.event.get():
-            # Si on appuie sur la croix pour quitter
-            if event.type == pygame.QUIT:
-                # alors runnig = False
-                running = False
-                # et la fenetre se ferme.
-                pygame.quit()
-
-
+    # Permet de cliquer 1 par 1 (pour le volume)
+    if event.type == MOUSEBUTTONUP and event.button == 1:
+        bouton_down = False
