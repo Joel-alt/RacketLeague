@@ -23,15 +23,12 @@ class Enemy(pygame.sprite.Sprite):
 
 
         #enemy 2 :
-        self.image = pygame.image.load('assets/enemy.png').convert_alpha()
-        self.rect = self.image.get_rect()
-        self.rect.x = 1200
-        self.rect.y = 200
+        self.im_enemy_2= pygame.image.load('assets/enemy_2.png').convert_alpha()
+        self.enemy_2_rect = self.im_enemy_2.get_rect()
+        self.enemy_2_rect.x = 2000
+        self.enemy_2_rect.y = 50
 
-        self.i = 0
-        self.amplitude = 25
 
-        self.compteur = 0
    
    
    
@@ -48,18 +45,18 @@ class Enemy(pygame.sprite.Sprite):
         elif self.i== 180:
             self.i=0
 
-
     # la fonction sinus va trop vite, du coup le papillon s'affiche mal, donc je fais un compteur pour faire varier la valeur de i plus lentement .
     #edit, j'ai remplacé self.i += 1 par += 0.1, et c'est beaucoup mieux !
 
-    """def move_2(selfself):
-        self.rect.x -= self.vitesse
-        self.rect.y = 200 +
-        self.compteur += 1
+    """def move_2(self):
+        self.enemy_2_rect.x -=  self.vitesse
+        
+        if self.enemy_2_rect.y == 200:
+            self.enemy_2_rect.y += 2
+            
+        
+        elif self.hauteur :
+            self.enemy_2_rect.y -= 2
+        """
 
-        if self.i >= 0 and self.i != 180:
-            self.i += 0.1
-            self.compteur = 0
 
-        elif self.i == 180:
-            self.i = 0"""

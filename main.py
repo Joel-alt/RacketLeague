@@ -18,7 +18,8 @@ pygame.init()
 #Titre fenetre
 pygame.display.set_caption("VR7")
 #Taille fenetre
-screen = pygame.display.set_mode((1600,950),pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1600,950))
+                                 #,pygame.FULLSCREEN)
 #pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 
@@ -51,7 +52,8 @@ font=pygame.font.Font(None, 50)
 #PV Joueur
 PV = 10
 music_1PV = False
-StrPV = font.render("PV : "+str(PV),1,(16,16,22))
+PV_im = pygame.image.load('assets/PV.png').convert_alpha()
+StrPV = font.render("    "+str(PV),1,(16,16,22))
 
 #Score Joueur
 score = 0
@@ -87,7 +89,13 @@ options = False
 bouton_down = False
 NiveauDifficulté = 0
 menu_bg =pygame.image.load('assets/bg_menu.png').convert_alpha()
-Niveau = pygame.image.load('assets/niveau_1.png').convert_alpha()
+Niveau = pygame.image.load('assets/niveau_0.png').convert_alpha()
+
+#MENU
+bouton_menu =pygame.image.load('assets/menu_off.png').convert_alpha()
+bouton_menu_rect = bouton_menu.get_rect()
+bouton_menu_rect.x = 590
+bouton_menu_rect.y = 550
 
 #JOUER
 bouton_jouer =pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
@@ -200,11 +208,15 @@ while running:
             music_menu = True
             game.sonore.menu_sound.play(100,0,5000)
 
+
         # background
         screen.blit(background, (0, 0))
         screen.blit(menu_bg, (0, 0))
 
         if options == False:
+
+            if Jeu_lancé == True :
+                screen.blit(bouton_menu, bouton_menu_rect)
 
             screen.blit(bouton_jouer, bouton_jouer_rect)
             screen.blit(bouton_options, bouton_options_rect)
@@ -262,15 +274,59 @@ while running:
 
 
         if options == False:
+            #########################               BOTUON MENU
+            if bouton_menu_rect.collidepoint(x, y):
+                bouton_menu = pygame.image.load('assets/menu_on.png').convert_alpha()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if bouton_down == False:
+                        game.sonore.clic_sound.play()
+                        bouton_down = True
+                    Jeu_lancé = False
+                    Menu = True
+                    if NiveauDifficulté == 0:
+                        PV = 10
+                        game.enemy.vitesse == 1
+                    elif NiveauDifficulté == 1:
+                        PV = 10
+                        game.enemy.vitesse = 2
+                    elif NiveauDifficulté == 2:
+                        PV = 5
+                        game.enemy.vitesse = 5
+                    elif NiveauDifficulté == 3:
+                        PV = 1
+                        game.enemy.vitesse = 5
+                    game.enemy.enemy.x=2000
+                    music_1PV=False
+                    score = 0
+                    game.player.joueur.x = 400
+                    game.player.joueur.y = 0
+                    Compteur = 600
+                    game.pressed ={}
+                    compteur_temps_boost = 0
+                    Boost = False
+                    game.player.vitesse = 3
+                    game.player.Jump_Boost = False
+                    game.gravite = 3
+                    game.resistance = 0
+                    tmp = 0
+                    mystere = 0
+                    StrEffects = font.render("", 1, (16, 16, 22))
+                    bouton_menu = pygame.image.load('assets/menu_off.png').convert_alpha()
+            else :
+                bouton_menu = pygame.image.load('assets/menu_off.png').convert_alpha()
+
+
+
 
             #########################               BOUTON QUITTER
             bouton_quitter_rect.x = 820
             bouton_quitter_rect.y = 450
             if bouton_quitter_rect.collidepoint(x, y):
                 bouton_quitter = pygame.image.load('assets/bouton_quitter_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1and bouton_down == False:
-                    bouton_down = True
-                    game.sonore.clic_sound.play()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if bouton_down == False:
+                        game.sonore.clic_sound.play()
+                        bouton_down = True
                     # alors runnig = False
                     running = False
                     # et la fenetre se ferme.
@@ -290,13 +346,14 @@ while running:
                     bouton_jouer = pygame.image.load('assets/bouton_jouer_on.png').convert_alpha()
                 else :
                     bouton_jouer = pygame.image.load('assets/bouton_retour_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
-                    game.sonore.clic_sound.play()
-                    bouton_down = True
-                    # ALORS ON JOUE
-                    Menu = False
-                    music_menu = False
-                    Jeu_lancé = True
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if bouton_down == False:
+                        game.sonore.clic_sound.play()
+                        bouton_down = True
+                        # ALORS ON JOUE
+                        Menu = False
+                        music_menu = False
+                        Jeu_lancé = True
             elif not bouton_jouer_rect.collidepoint(x, y):
                 if Jeu_lancé == False:
                     bouton_jouer = pygame.image.load('assets/bouton_jouer_off.png').convert_alpha()
@@ -306,9 +363,10 @@ while running:
             #########################               BOUTON OPTIONS
             if bouton_options_rect.collidepoint(x, y) :
                 bouton_options = pygame.image.load('assets/bouton_options_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and event.button == 1 and bouton_down == False:
-                    bouton_down = True
-                    game.sonore.clic_sound.play()
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if bouton_down == False:
+                        game.sonore.clic_sound.play()
+                        bouton_down = True
                     # ALORS ON ACCEDE AUX OPTIONS
                     options = True
             elif not bouton_options_rect.collidepoint(x, y):
@@ -322,11 +380,12 @@ while running:
             if bouton_volume_plus_rect.collidepoint(x, y):
                 bouton_volume_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if game.sonore.NiveauVolume < 1 and bouton_down == False:
-                        bouton_down = True
-                        game.sonore.NiveauVolume += 0.1
-                        game.sonore.Volume()
-                        game.sonore.pop_up_sound.play()
+                    if game.sonore.NiveauVolume < 1:
+                        if bouton_down == False:
+                            bouton_down = True
+                            game.sonore.NiveauVolume += 0.1
+                            game.sonore.Volume()
+                            game.sonore.pop_up_sound.play()
                     bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(game.sonore.NiveauVolume*10))+'.png').convert_alpha()
             elif not bouton_volume_plus_rect.collidepoint(x, y):
                 bouton_volume_plus = pygame.image.load('assets/bouton_plus_off.png').convert_alpha()
@@ -335,11 +394,12 @@ while running:
             if bouton_volume_moins_rect.collidepoint(x, y):
                 bouton_volume_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if game.sonore.NiveauVolume > 0 and bouton_down == False:
-                        bouton_down = True
-                        game.sonore.NiveauVolume -= 0.1
-                        game.sonore.Volume()
-                        game.sonore.pop_up_sound.play()
+                    if game.sonore.NiveauVolume > 0:
+                        if bouton_down == False:
+                            bouton_down = True
+                            game.sonore.NiveauVolume -= 0.1
+                            game.sonore.Volume()
+                            game.sonore.pop_up_sound.play()
                     bouton_volume = pygame.image.load('assets/bouton_volume_'+str(int(game.sonore.NiveauVolume*10))+'.png').convert_alpha()
                 # réduire Volume aussi
             elif not bouton_volume_moins_rect.collidepoint(x, y):
@@ -350,10 +410,11 @@ while running:
                 if bouton_difficulté_plus_rect.collidepoint(x, y):
                     bouton_difficulté_plus = pygame.image.load('assets/bouton_plus_on.png').convert_alpha()
                     if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                        if NiveauDifficulté < 3 and bouton_down == False:
-                            game.sonore.clic_sound.play()
-                            bouton_down = True
-                            NiveauDifficulté += 1
+                        if NiveauDifficulté < 3:
+                            if bouton_down == False:
+                                bouton_down = True
+                                game.sonore.clic_sound.play()
+                                NiveauDifficulté += 1
                         bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
                     # REDUIRE DIFFICLUTE
                 elif not bouton_volume_moins_rect.collidepoint(x, y):
@@ -365,10 +426,11 @@ while running:
                 if bouton_difficulté_moins_rect.collidepoint(x, y):
                     bouton_difficulté_moins = pygame.image.load('assets/bouton_moins_on.png').convert_alpha()
                     if event.type == MOUSEBUTTONDOWN and event.button == 1:
-                        if NiveauDifficulté > 0 and bouton_down == False:
-                            game.sonore.clic_sound.play()
-                            bouton_down = True
-                            NiveauDifficulté -= 1
+                        if NiveauDifficulté > 0:
+                            if bouton_down == False:
+                                game.sonore.clic_sound.play()
+                                bouton_down = True
+                                NiveauDifficulté -= 1
                         bouton_difficulté = pygame.image.load('assets/bouton_difficulté_'+str(int(NiveauDifficulté))+'.png').convert_alpha()
                             # REDUIRE DIFFICLUTE
                 elif not bouton_volume_moins_rect.collidepoint(x, y):
@@ -378,7 +440,7 @@ while running:
 
                 if NiveauDifficulté == 0:
                     PV = 10
-                    game.enemy.vitesse == 1
+                    game.enemy.vitesse = 1
                 elif NiveauDifficulté == 1:
                     PV = 10
                     game.enemy.vitesse = 2
@@ -394,10 +456,11 @@ while running:
             #########################               BOUTON RETOUR MENU
             if bouton_retour_rect.collidepoint(x,y):
                 bouton_retour =  pygame.image.load('assets/bouton_retour_on.png').convert_alpha()
-                if event.type == MOUSEBUTTONDOWN and bouton_down == False:
-                    game.sonore.clic_sound.play()
-                    bouton_down = True
-                    options = False
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if bouton_down == False:
+                        game.sonore.clic_sound.play()
+                        bouton_down = True
+                        options = False
             elif not bouton_retour_rect.collidepoint(x,y):
                 bouton_retour = pygame.image.load('assets/bouton_retour_off.png').convert_alpha()
 
@@ -448,17 +511,19 @@ while running:
         #image joueur
         screen.blit(player.im_joueur, game.player.joueur)
         #image niveau
-        screen.blit(Niveau,(0,60))
 
 
         #texte
-
+        if PV == 1:
+            PV_im = pygame.image.load('assets/PV_low.png')
+        else :
+            PV_im = pygame.image.load('assets/PV.png')
+        screen.blit(PV_im, (4,30))
         StrScore = font.render("Score : "+str(score),1,(16,16,22))
-        StrPV = font.render("PV : " + str(PV), 1, (16, 16, 22))
+        StrPV = font.render("    " + str(PV), 1, (16, 16, 22))
 
         screen.blit(StrScore, (10, 2))
-        screen.blit(StrPV, (10, 30))
-
+        screen.blit(StrPV, (10, 35))
         screen.blit(StrEffects, (700, 2))
 
 
@@ -745,7 +810,7 @@ while running:
 
         #Si on attrape un papillon
 
-        if game.enemy.enemy.y <= game.player.joueur.midright[1] and game.enemy.enemy.y >= game.player.joueur.top and game.player.joueur.colliderect(game.enemy.enemy) :
+        if game.player.joueur.colliderect(game.enemy.enemy) :
             game.sonore.swoosh_sound.play()
             game.enemy.enemy.x = randint(1700, 2200)
             game.enemy.y_e = randint(100,600)
@@ -753,7 +818,7 @@ while running:
 
             #Difficultés
             if score == 5:
-                Niveau = pygame.image.load('assets/niveau_1.png').convert_alpha()
+                Niveau = pygame.image.load('assets/niveau_0.png').convert_alpha()
                 game.enemy.vitesse += 1
             elif score == 10:
                 Niveau = pygame.image.load('assets/niveau_2.png').convert_alpha()
@@ -766,12 +831,12 @@ while running:
                 game.enemy.vitesse += 1
             elif score >= 40:
                 Niveau = pygame.image.load('assets/niveau_5.png').convert_alpha()
-                game.enemy.vitesse += 1
+                game.enemy.vitesse += 0.1
 
 
             score += 1
-            screen.blit(Niveau,(0,60))
             game.enemy.move()
+        screen.blit(Niveau, (0, 70))
 
 
 
@@ -833,10 +898,8 @@ while running:
         StrScore = font.render("Score : " + str(score), 1, (16, 16, 22))
         StrPV = font.render("PV : " + str(PV), 1, (16, 16, 22))
 
-        screen.blit(StrScore, (10, 2))
-        screen.blit(StrPV, (10, 30))
+        screen.blit(StrScore, (750, 100))
 
-        screen.blit(StrEffects, (700, 2))
 
 
         #ecran game over
@@ -857,7 +920,7 @@ while running:
                     print(NiveauDifficulté)
                     if NiveauDifficulté == 0:
                         PV = 10
-                        game.enemy.vitesse == 1
+                        game.enemy.vitesse = 1
                     elif NiveauDifficulté == 1:
                         PV = 10
                         game.enemy.vitesse = 2
