@@ -59,10 +59,11 @@ StrPV = font.render("    "+str(PV),1,(16,16,22))
 score = 0
 
 #Texte score
-StrScore = font.render("Score : "+str(score),1,(16,16,22))
+StrScore = font.render("        "+str(score),1,(16,16,22))
+im_score = pygame.image.load('assets/score.png').convert_alpha()
 
 #text effets
-StrEffects = font.render("",1,(16,16,22))
+StrEffects = font.render("", 1, (16, 16, 22))
 
 #variable qui reste vraie tant que la fenetre est ouverte
 running=True
@@ -519,12 +520,13 @@ while running:
         else :
             PV_im = pygame.image.load('assets/PV.png')
         screen.blit(PV_im, (4,30))
-        StrScore = font.render("Score : "+str(score),1,(16,16,22))
+        StrScore = font.render("        "+str(score),1,(16,16,22))
+        screen.blit(im_score, (4,2))
         StrPV = font.render("    " + str(PV), 1, (16, 16, 22))
 
         screen.blit(StrScore, (10, 2))
         screen.blit(StrPV, (10, 35))
-        screen.blit(StrEffects, (700, 2))
+        screen.blit(StrEffects, (1300, 2))
 
 
         #music
@@ -581,7 +583,7 @@ while running:
                     if game.player.joueur.colliderect(game.effects.rect_vitesse):
                         if Boost == False:
                             game.sonore.speed_sound.play()
-                        StrEffects = font.render("Speed Boost !",1,(0,90,63))
+                        StrEffects = pygame.image.load('assets/effect_speed.png').convert_alpha()
                         Boost = True
 
                 elif effet == 2:
@@ -590,7 +592,7 @@ while running:
                             game.sonore.jump_boost_sound.play()
                         Boost = True
                         game.player.Jump_Boost = True
-                        StrEffects = font.render("Jump Boost !", 1, (177, 0, 250))
+                        StrEffects = pygame.image.load('assets/effect_jump_boost.png').convert_alpha()
 
 
                 if Boost == True:
@@ -664,34 +666,44 @@ while running:
 
                     if mystere == 1 :
                         game.gravite = 1
-                        StrEffects = font.render("Gravité plus faible !", 1, (177, 0, 250))
+                        StrEffects = pygame.image.load('assets/gravité_moins.png').convert_alpha()
 
                     if mystere == 2 :
                         game.gravite = 6
-                        StrEffects = font.render("Gravité plus forte !", 1, (165, 0, 15))
+                        StrEffects = pygame.image.load('assets/gravité_plus.png').convert_alpha()
 
                     if mystere == 3:
                         if tmp == 0:
                             tmp = game.enemy.vitesse
                             game.enemy.vitesse = 1
-                        StrEffects = font.render("Papillon ralenti !", 1, (165, 0, 15))
+                        StrEffects = pygame.image.load('assets/enemy_slowness.png').convert_alpha()
 
 
                     if mystere == 4:
                         game.player.vitesse = 1
-                        StrEffects = font.render("Vitesse ralentie !", 1, (165, 0, 15))
+                        StrEffects = pygame.image.load('assets/effect_slowness.png').convert_alpha()
 
                     if mystere == 5:
                         if tmp == 0 :
-                            tmp = randint(1,5)
+                            tmp = randint(1,3)
                             score += tmp
-                        StrEffects = font.render("Bonus : + "+str(tmp)+"points !", 1, (165, 0, 15))
+                        if tmp == 1:
+                            StrEffects = pygame.image.load('assets/bonus_1.png').convert_alpha()
+                        elif tmp == 2:
+                            StrEffects = pygame.image.load('assets/bonus_2.png').convert_alpha()
+                        elif tmp == 3:
+                            StrEffects = pygame.image.load('assets/bonus_3.png').convert_alpha()
 
                     if mystere == 6:
                         if tmp == 0 :
-                            tmp = randint(1,5)
+                            tmp = randint(1,3)
                             score -= tmp
-                        StrEffects = font.render("Malus : - "+str(tmp)+"points !", 1, (165, 0, 15))
+                        if tmp == 1:
+                            StrEffects = pygame.image.load('assets/malus_1.png').convert_alpha()
+                        elif tmp == 2:
+                            StrEffects = pygame.image.load('assets/malus_2.png').convert_alpha()
+                        elif tmp == 3:
+                            StrEffects = pygame.image.load('assets/malus_3.png').convert_alpha()
 
 
                     if compteur_temps_boost >= 2000:
@@ -836,7 +848,7 @@ while running:
 
             score += 1
             game.enemy.move()
-        screen.blit(Niveau, (0, 70))
+        screen.blit(Niveau, (720, 10))
 
 
 
@@ -893,12 +905,7 @@ while running:
         # image joueur
         screen.blit(player.im_joueur, game.player.joueur)
 
-        # texte
 
-        StrScore = font.render("Score : " + str(score), 1, (16, 16, 22))
-        StrPV = font.render("PV : " + str(PV), 1, (16, 16, 22))
-
-        screen.blit(StrScore, (750, 100))
 
 
 
@@ -906,6 +913,15 @@ while running:
         screen.blit(bgOver, (0, 0))
         screen.blit(bouton_quitter, bouton_quitter_rect)
         screen.blit(bouton_rejouer, bouton_rejouer_rect)
+
+        # texte
+
+        StrScore = font.render("        "+str(score),1,(16,16,22))
+        StrPV = font.render("PV : " + str(PV), 1, (16, 16, 22))
+
+        screen.blit(StrScore, (750, 100))
+        screen.blit(im_score,(746,100))
+
 
         ## Si le focus est sur la fenêtre.
         if pygame.mouse.get_focused():
@@ -959,6 +975,8 @@ while running:
             elif not bouton_quitter_rect.collidepoint(x, y):
                 bouton_quitter = pygame.image.load('assets/bouton_quitter_off.png').convert_alpha()
 
+
+
     # Permet de cliquer 1 par 1 (pour le volume)
-    if event.type == MOUSEBUTTONUP and event.button == 1:
+    if event.type != MOUSEBUTTONDOWN :
         bouton_down = False

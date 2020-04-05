@@ -40,7 +40,7 @@ class Effects(pygame.sprite.Sprite):
         
         
     def boost_vitesse(self):
-        self.rect_vitesse.y = self.y_i + sin(self.i)*10
+        self.rect_vitesse.x = self.y_i + sin(self.i)*10
         
         
         self.compteur += 1
